@@ -5,6 +5,9 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppProvider } from "./contexts/AppContext";
 import { AccessibilityProvider } from "./contexts/AccessibilityContext";
+import { ErrorBoundary } from "./components/ErrorBoundary";
+import { offlineService } from "./services/offlineService";
+import { useEffect } from "react";
 import Account from "@/pages/Account";
 import Tickets from "@/pages/Tickets";
 import Boarding from "@/pages/Boarding";
@@ -17,6 +20,7 @@ import Navigation from "@/components/Navigation";
 import VoiceCommand from "@/components/VoiceCommand";
 import LanguageSelector from "@/components/LanguageSelector";
 import LiveRegion from "@/components/LiveRegion";
+import StatusIndicator from "@/components/StatusIndicator";
 import { Bus } from "lucide-react";
 
 function Router() {

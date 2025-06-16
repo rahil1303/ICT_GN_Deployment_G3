@@ -18,32 +18,35 @@ export default function VoiceCommand() {
   });
 
   const handleVoiceCommand = (command: string) => {
-    if (command.includes('account') || command.includes('go to account')) {
+    if (command.includes('account') || command.includes('go to account') || command.includes('profile')) {
       setLocation('/account');
-      announceToUser('Navigated to Account');
-    } else if (command.includes('plan journey') || command.includes('plan trip')) {
-      setLocation('/plan');
-      announceToUser('Navigated to Plan Journey');
-    } else if (command.includes('tickets') || command.includes('buy ticket')) {
+      announceToUser('Opening Account page');
+    } else if (command.includes('plan journey') || command.includes('plan trip') || command.includes('route') || command.includes('journey')) {
+      setLocation('/plan-journey');
+      announceToUser('Opening Journey Planning page');
+    } else if (command.includes('tickets') || command.includes('buy ticket') || command.includes('purchase')) {
       setLocation('/tickets');
-      announceToUser('Navigated to Tickets');
-    } else if (command.includes('boarding') || command.includes('assistance')) {
+      announceToUser('Opening Tickets page');
+    } else if (command.includes('boarding') || command.includes('assistance') || command.includes('help boarding')) {
       setLocation('/boarding');
-      announceToUser('Navigated to Boarding');
-    } else if (command.includes('validation') || command.includes('check in')) {
+      announceToUser('Opening Boarding Assistance page');
+    } else if (command.includes('validation') || command.includes('check in') || command.includes('validate')) {
       setLocation('/validation');
-      announceToUser('Navigated to Validation');
-    } else if (command.includes('alerts') || command.includes('notifications')) {
+      announceToUser('Opening Validation page');
+    } else if (command.includes('alerts') || command.includes('notifications') || command.includes('news')) {
       setLocation('/alerts');
-      announceToUser('Navigated to Alerts');
-    } else if (command.includes('support') || command.includes('help')) {
+      announceToUser('Opening Alerts page');
+    } else if (command.includes('support') || command.includes('help') || command.includes('contact')) {
       setLocation('/support');
-      announceToUser('Navigated to Support');
-    } else if (command.includes('settings') || command.includes('preferences')) {
+      announceToUser('Opening Support page');
+    } else if (command.includes('settings') || command.includes('preferences') || command.includes('configure')) {
       setLocation('/settings');
-      announceToUser('Navigated to Settings');
+      announceToUser('Opening Settings page');
+    } else if (command.includes('home') || command.includes('main') || command.includes('dashboard')) {
+      setLocation('/');
+      announceToUser('Returning to main page');
     } else {
-      announceToUser('Command not recognized. Try saying "Go to Account" or "Plan Journey"');
+      announceToUser('Command not recognized. Try saying: go to tickets, plan journey, boarding assistance, or settings');
     }
     
     vibratePattern(100);
