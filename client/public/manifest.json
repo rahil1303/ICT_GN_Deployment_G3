@@ -1,0 +1,33 @@
+{
+  "name": "TransitAccess - Accessible Public Transport",
+  "short_name": "TransitAccess",
+  "description": "WCAG 2.1 AA-compliant PWA for visually impaired users featuring voice-controlled transit planning and boarding assistance",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFD700",
+  "theme_color": "#FFD700",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3e%3crect width='100' height='100' fill='%23FFD700'/%3e%3cpath d='M20 30h60v40H20z' fill='%23000'/%3e%3crect x='25' y='35' width='15' height='10' fill='%23FFD700'/%3e%3crect x='45' y='35' width='15' height='10' fill='%23FFD700'/%3e%3crect x='65' y='35' width='10' height='10' fill='%23FFD700'/%3e%3ccircle cx='30' cy='75' r='5' fill='%23000'/%3e%3ccircle cx='70' cy='75' r='5' fill='%23000'/%3e%3c/svg%3e",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3e%3crect width='100' height='100' fill='%23FFD700'/%3e%3cpath d='M20 30h60v40H20z' fill='%23000'/%3e%3crect x='25' y='35' width='15' height='10' fill='%23FFD700'/%3e%3crect x='45' y='35' width='15' height='10' fill='%23FFD700'/%3e%3crect x='65' y='35' width='10' height='10' fill='%23FFD700'/%3e%3ccircle cx='30' cy='75' r='5' fill='%23000'/%3e%3ccircle cx='70' cy='75' r='5' fill='%23000'/%3e%3c/svg%3e",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ],
+  "categories": ["accessibility", "transportation", "travel"],
+  "lang": "en",
+  "scope": "/",
+  "screenshots": [
+    {
+      "src": "data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 800'%3e%3crect width='400' height='800' fill='%23FFD700'/%3e%3ctext x='200' y='400' text-anchor='middle' font-size='24' fill='%23000'%3eTransitAccess%3c/text%3e%3c/svg%3e",
+      "sizes": "400x800",
+      "type": "image/svg+xml",
+      "form_factor": "narrow"
+    }
+  ]
+}
