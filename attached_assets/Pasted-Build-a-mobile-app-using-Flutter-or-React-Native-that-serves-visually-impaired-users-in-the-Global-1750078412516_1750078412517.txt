@@ -1,0 +1,243 @@
+Build a mobile app (using Flutter or React Native) that serves visually impaired users in the Global North. The app must be WCAG 2.1 Level AA–compliant, multilingual (English, Spanish, French), and modular. Focus on these high-level workflows as distinct functionalities, and apply the specified design choices throughout.
+
+Technical Stack & Accessibility Foundations
+Framework: Flutter or React Native for iOS and Android.
+
+Accessibility APIs:
+
+Screen-reader support (Semantics in Flutter; accessibilityLabel/accessibilityRole in RN).
+
+Text-to-Speech via native TTS.
+
+Voice input via Speech-to-Text (speech_to_text in Flutter; react-native-voice).
+
+Haptic feedback (vibration patterns).
+
+Theming & Layout:
+
+Single-column, responsive layout; scalable fonts using relative units.
+
+Default high-contrast theme (black text on yellow background or its dark-mode inverse). CSS variables or theme data for easy toggling.
+
+Icons always paired with text labels and aria/accessibility labels.
+
+Internationalization:
+
+Resource files for English, Spanish, French.
+
+On language change: update UI strings, TTS voice locale, voice recognition locale. Announce change via TTS.
+
+Offline & Data Storage:
+
+Local storage (SQLite/AsyncStorage) for saved journeys, tickets, preferences.
+
+Graceful offline behavior: cached data for saved routes/tickets; TTS announcements when real-time unavailable.
+
+Mock & Real APIs:
+
+Abstract services for routing (GTFS or mock), real-time feed, boarding assistance notifications, exception reports.
+
+Toggle mock mode for development/testing.
+
+Voice & Focus Management:
+
+Use ARIA live regions or equivalent to announce dynamic updates.
+
+After navigation or modal, set focus and announce screen name and context.
+
+Provide a persistent “Voice Command” activation button for commands like “Go to Plan Journey” or “Request Assistance.”
+
+Functionalities (Distinct Workflows/Tabs)
+1. Account & Subscription Management
+Goal: Register/manage transit account, purchase and store passes.
+
+Key Features & Design Choices:
+
+Accessible Registration Form: Voice-driven field entry with TTS hints (“Enter email”). Large-text fallback.
+
+Subscription Purchase: List available passes with large text and TTS price announcements. Voice confirmation before purchase.
+
+Pass Wallet: Show active passes via TTS on focus (“Monthly pass valid until…”). Voice command “Activate pass.”
+
+Expiry Notifications: TTS/vibration reminders for expiring passes.
+
+Accessibility: All inputs labeled; error messages read aloud; keyboard/voice navigation; high-contrast UI.
+
+2. Ticket Purchase & Validation
+Goal: Buy tickets and ensure easy validation.
+
+Key Features & Design Choices:
+
+Ticket Purchase Flow: Voice selection of ticket type and fare zones; large buttons; TTS confirmation of cost.
+
+Digital Ticket Storage: Cache ticket info locally; display QR/NFC placeholder plus TTS-readable ticket ID (“Ticket ID: ABC123”).
+
+Validation Support: Auto-validate via geolocation or user tap “Validate”; TTS “Ticket validated.” If tapping inaccessible, “Notify validator” triggers mock notification to driver with TTS feedback.
+
+Offline Ticket Access: TTS “Your ticket is valid until…” when offline.
+
+Accessibility: Semantic components, voice commands (“Validate ticket now”), haptic confirmation on validation.
+
+3. Boarding the Correct Vehicle
+Goal: Identify and board the correct bus/route, with assistance if needed.
+
+Key Features & Design Choices:
+
+Select or Plan Journey: User picks a saved journey or enters destination via voice/text; TTS reads summary.
+
+Detect My Bus: Prominent button; on press, TTS “Detection started.” Use real-time feed + GPS (or mock) to announce approaching vehicles: ARIA live updates (“Bus 19 arriving in 3 min”). Vibration: long pulse for correct bus, short for others.
+
+Missed Boarding Fallback: If bus departs or detection times out: TTS “Bus departed; next bus in 7 min. Switch?” Accept via voice/button.
+
+Boarding Assistance Request: Within this workflow, a “Request Boarding Assistance” button: accessible label, large, high-contrast. On tap: mock API call, TTS “Driver notified to assist your boarding,” vibration confirmation. After mock response: TTS “Driver acknowledged; be ready.”
+
+Accessibility: ARIA live regions announcing status; voice commands (“Start detection”, “Request assistance”, “Missed bus”); focus remains on actionable buttons; clear TTS feedback.
+
+4. Check-in / Check-out & Exception Handling
+Goal: Handle validation automatically and manage missed taps.
+
+Key Features & Design Choices:
+
+Auto Check-in: When detection confirms boarding, auto-validate: TTS “Checked in on Bus 19.”
+
+Auto Check-out: Geofencing or user tap “Check out”: TTS “Checked out at Stop X.”
+
+Missed Validation Alert: If boarding detected without validation, TTS “It seems you boarded without validating. Report?” Accept via voice/button.
+
+Exception Report Flow: Accessible form: voice prompts to confirm date/time/route; TTS reads entries; on submit: mock API call, TTS “Report submitted.”
+
+Journey History: List past trips; each read via TTS when focused (“June 10: Bus 19 from A to B; validated”). For pending exceptions, TTS “Report pending.”
+
+Accessibility: Semantic form fields, voice-driven prompts, vibration feedback on submission, focus management when forms appear.
+
+5. Journey Planning & Alternatives
+Goal: Plan trips and adapt to real-time disruptions.
+
+Key Features & Design Choices:
+
+Trip Wizard: Voice input “Plan journey from home to hospital at 10 AM tomorrow”; fetch options via routing API or mock. Present options as large-text cards; TTS reads summary. Filters via voice/buttons (“Fewer transfers”, “Low-floor vehicles only”).
+
+Save Journeys: Accessible “Save journey” button with TTS confirmation.
+
+Dynamic Rerouting: While en route, subscribe to real-time feed; if disruption, TTS “Your bus delayed; alternative: tram departing in 4 min. Switch?” Accept via voice/button.
+
+Accessibility: ARIA live announcements for reroutes; voice commands for selection; haptic cues on important changes.
+
+6. Notifications & Alerts
+Goal: Keep users informed of service changes, personal reminders, emergencies.
+
+Key Features & Design Choices:
+
+Service Alerts: Subscribe to saved routes; on disruption, use Notification API plus in-app ARIA live: TTS “Line 19 suspended; plan alternative.” Vibration if critical.
+
+Personal Reminders: Pass expiry, upcoming trips: TTS “Journey to clinic in 30 minutes.”
+
+Emergency Alerts: Severe weather/incidents: TTS/vibration: “Alert: severe weather on your route.”
+
+Accessibility: Notifications announced by screen reader; allow configuring alert types and frequency in Settings.
+
+7. Support & Feedback
+Goal: Provide accessible help and gather user feedback.
+
+Key Features & Design Choices:
+
+Help Center: Searchable FAQ via voice/text; large-text list; TTS reads Q&A on focus. Voice command “How to request assistance?”
+
+Feedback Submission: Voice-record or accessible form (“Describe issue”); TTS guidance and confirmation. Store locally and send when online.
+
+Live Assistance: “Call Support” or “Chat Support” mock flows; TTS instructions for dialing or chatting.
+
+Accessibility: All controls labeled; voice navigation; ARIA live for responses.
+
+8. Settings & Personalization
+Goal: Let users configure language, accessibility, privacy, and mock modes.
+
+Key Features & Design Choices:
+
+Language Selection: English/Spanish/French toggle; on selection, TTS announces new language; update Recognition and TTS locale.
+
+Accessibility Toggles: Speech rate slider with TTS preview; vibration intensity test; theme selector (high-contrast options).
+
+Privacy/Data: Manage location permission with TTS explanation; clear stored data with confirmation.
+
+Assistance Preferences: Predefine boarding assistance note (“I use wheelchair”); TTS confirms.
+
+Development Toggles: “Use mock GTFS data”, “Simulate driver response”, “Simulate missed validation.” TTS announces toggle state.
+
+Accessibility: Semantic controls, voice commands (“Set speech rate to 1.5x”), focus management after changes.
+
+Implementation & Testing Guidance
+Modular Services:
+
+TransitService: fetch routes, real-time updates (real/mock).
+
+VoiceService: wrap SpeechRecognition; handle errors with TTS fallback.
+
+TTSService: centralized TTS calls with locale.
+
+LocationService: geolocation, geofencing for check-in/out.
+
+NotificationService: in-app and push notifications.
+
+AssistanceService: mock boarding assistance API.
+
+StorageService: manage local data (routes, tickets, history) securely.
+
+Accessibility Utilities:
+
+Hook or helper announce(text) that triggers ARIA live region update + TTS.
+
+Focus management helpers to set focus after navigation or pop-ups.
+
+Voice Command Handling:
+
+Global “Voice Command” activation: use Web Speech API or native modules; map commands to navigation or actions. Provide TTS feedback on unrecognized commands.
+
+Haptic Patterns:
+
+Define consistent vibration patterns for: arrival alerts, validation success, assistance confirmation, errors. Ensure fallback to TTS if unsupported.
+
+Offline Behavior:
+
+Service Worker (PWA) or offline caching strategy in mobile. Announce offline status and degraded features. Queue actions (e.g., exception reports) to sync when online.
+
+Internationalization:
+
+Use i18n library; ensure all strings (UI, TTS prompts, errors, onboarding) are translated. On language switch, reinitialize voice recognition/synthesis with correct locale.
+
+Onboarding Flow:
+
+Implement a guided tutorial using sequential TTS messages and focus on elements: “This is Plan Journey tab...”, with skip and replay options.
+
+Testing & Simulation:
+
+Include toggles for mock data; provide sample JSON for GTFS-RT-like updates.
+
+Instructions for testing with screen readers (VoiceOver/TalkBack).
+
+Simulate voice inputs via pre-recorded phrases.
+
+Test vibration patterns on devices/emulators.
+
+Document steps to test each workflow end-to-end.
+
+Deliverables
+Complete project scaffold: organized into workflows/tabs matching the eight functionalities above.
+
+UI components: semantic, accessible, high-contrast, large-text, labeled icons.
+
+Services & contexts: modular code for voice/TTS, location, transit data, notifications, storage.
+
+Multilingual resources: English, Spanish, French translations.
+
+Mock endpoints & data: for routing, real-time updates, assistance requests, exception reports.
+
+Accessibility annotations & comments: explain design decisions and justifications (e.g., reducing cognitive load, ensuring independence).
+
+Onboarding tutorial code: TTS-driven walkthrough.
+
+Testing guide: how to simulate real-time updates, test voice/TTS flows, screen-reader verification, offline scenarios.
+
+Documentation: instructions to extend the app (adding languages, integrating real APIs, backend services).
+
+📝 Note to Replit AI: Emphasize each high-level workflow as a distinct module/screen with clear entry points. Apply design choices—single-column, high contrast, scalable fonts, voice/haptic feedback, multilingual TTS/voice input, semantic accessibility props—consistently. Ensure the code is modular so developers can replace mocks with real services. Prioritize usability and independence for visually impaired users at every step.
