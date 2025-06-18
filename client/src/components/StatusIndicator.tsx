@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Wifi, WifiOff, CloudSync, AlertCircle } from "lucide-react";
+import { Wifi, WifiOff, RefreshCw, AlertCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useAccessibility } from "../contexts/AccessibilityContext";
 import { offlineService } from "../services/offlineService";
