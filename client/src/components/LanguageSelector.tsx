@@ -22,8 +22,8 @@ export default function LanguageSelector() {
             className={`touch-target px-3 py-1 rounded font-medium text-sm transition-colors ${
               isActive
                 ? 'bg-primary text-primary-foreground'
-                : 'border-2 border-border text-foreground hover:bg-primary hover:text-primary-foreground'
-            }`}
+                : 'bg-yellow-300 text-black hover:bg-yellow-400'
+            }`}            
             aria-pressed={isActive}
             aria-label={`Switch to ${lang.label}`}
           >

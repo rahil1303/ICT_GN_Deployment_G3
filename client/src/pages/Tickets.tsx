@@ -12,6 +12,10 @@ export default function Tickets() {
   const { announceToUser, vibratePattern, language } = useAccessibility();
   const { t } = useTranslation(language);
   const [selectedTicketType, setSelectedTicketType] = useState<string | null>(null);
+  // State to manage the visibility of cash top-up locations
+  const [showTopUpLocations, setShowTopUpLocations] = useState(false); 
+  // Mock cash balance for demonstration
+  const [cashBalance, setCashBalance] = useState(0.00); 
 
   const { startListening, isListening } = useVoice({
     onResult: (transcript) => {
@@ -28,6 +32,13 @@ export default function Tickets() {
   // Purchase ticket mutation
   const purchaseTicketMutation = useMutation({
     mutationFn: async (ticketData: any) => {
+      // Simulate deducting from cash balance if applicable (for demo purposes)
+      if (ticketData.paymentMethod === 'cash') {
+        if (cashBalance * 100 < ticketData.price) {
+          throw new Error("Insufficient cash balance");
+        }
+        setCashBalance(prev => (prev * 100 - ticketData.price) / 100);
+      }
       const response = await apiRequest('POST', '/api/tickets', ticketData);
       return response.json();
     },
@@ -36,8 +47,12 @@ export default function Tickets() {
       vibratePattern(200);
       refetchTickets();
     },
-    onError: () => {
-      announceToUser('Ticket purchase failed. Please try again.');
+    onError: (error) => {
+      let errorMessage = 'Ticket purchase failed. Please try again.';
+      if (error.message === "Insufficient cash balance") {
+        errorMessage = 'Insufficient cash balance. Please top up or use a card.';
+      }
+      announceToUser(errorMessage);
       vibratePattern([100, 100, 100]);
     }
   });
@@ -62,10 +77,17 @@ export default function Tickets() {
   const handleVoicePurchase = (transcript: string) => {
     let ticketType = 'single';
     let price = 350; // $3.50 in cents
+    let paymentMethod = 'card'; // Default payment method
 
     if (transcript.includes('day pass') || transcript.includes('daily')) {
       ticketType = 'day';
       price = 1200; // $12.00 in cents
+    }
+
+    if (transcript.includes('with cash') || transcript.includes('using cash')) {
+      paymentMethod = 'cash';
+    } else if (transcript.includes('with card') || transcript.includes('using card')) {
+      paymentMethod = 'card';
     }
 
     const validUntil = new Date();
@@ -78,11 +100,12 @@ export default function Tickets() {
     purchaseTicketMutation.mutate({
       type: ticketType,
       price,
-      validUntil: validUntil.toISOString()
+      validUntil: validUntil.toISOString(),
+      paymentMethod // Include payment method
     });
   };
 
-  const handleTicketPurchase = (type: string, price: number) => {
+  const handleTicketPurchase = (type: string, price: number, paymentMethod: string = 'card') => {
     const validUntil = new Date();
     if (type === 'day') {
       validUntil.setHours(23, 59, 59, 999);
@@ -93,7 +116,8 @@ export default function Tickets() {
     purchaseTicketMutation.mutate({
       type,
       price,
-      validUntil: validUntil.toISOString()
+      validUntil: validUntil.toISOString(),
+      paymentMethod // Pass payment method to mutation
     });
   };
 
@@ -104,6 +128,13 @@ export default function Tickets() {
   const handleNotifyValidator = () => {
     announceToUser('Validator notified of digital ticket');
     vibratePattern([100, 50, 100]);
+  };
+
+  const handleAddCashValue = () => {
+    setShowTopUpLocations(prev => !prev); // Toggle visibility
+    if (!showTopUpLocations) {
+      announceToUser('Top up cash at Central Station, Airport, City Hall');
+    }
   };
 
   return (
@@ -147,6 +178,26 @@ export default function Tickets() {
                 <span className="font-bold text-lg">$12.00</span>
               </div>
             </Button>
+
+            {/* New Cash Balance Box */}
+            <Card className="border-2 border-border rounded-lg p-4 bg-background">
+              <CardContent className="p-0 flex justify-between items-center">
+                <span className="font-semibold text-lg text-foreground">💰 Cash Balance: ${cashBalance.toFixed(2)}</span>
+                <Button
+                  onClick={handleAddCashValue}
+                  variant="outline"
+                  className="touch-target px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90"
+                >
+                  ➕ Add Cash Value
+                </Button>
+              </CardContent>
+              {showTopUpLocations && (
+                <p className="text-sm text-muted-foreground mt-2">
+                  Top up cash at: **Central Station, Airport, City Hall**
+                </p>
+              )}
+            </Card>
+
           </div>
 
           {/* Voice Purchase Option */}
@@ -166,7 +217,7 @@ export default function Tickets() {
               {isListening ? 'Listening...' : 'Speak Your Order'}
             </Button>
             <p className="text-sm mt-2 text-muted-foreground">
-              Say something like "Single ride ticket" or "Day pass for all zones"
+            Say something like <strong>'single ticket with cash'</strong> or <strong>'day pass with card'</strong>
             </p>
           </div>
         </CardContent>
